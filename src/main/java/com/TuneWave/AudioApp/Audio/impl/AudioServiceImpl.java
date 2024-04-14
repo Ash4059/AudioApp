@@ -31,6 +31,6 @@ public class AudioServiceImpl implements AudioService {
 
     @Override
     public boolean deleteAudio(Long id) {
-        Audios.removeIf(audio -> audio.getId() == id);
+        return Audios.removeIf(audio -> audio.getId() == id);
     }
 }
