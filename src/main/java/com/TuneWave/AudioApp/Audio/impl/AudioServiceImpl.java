@@ -28,4 +28,9 @@ public class AudioServiceImpl implements AudioService {
     public Audio getAudioById(Long id){
         return Audios.stream().filter(audio -> audio.getId() == id).findFirst().orElse(null);
     }
+
+    @Override
+    public boolean deleteAudio(Long id) {
+        Audios.removeIf(audio -> audio.getId() == id);
+    }
 }

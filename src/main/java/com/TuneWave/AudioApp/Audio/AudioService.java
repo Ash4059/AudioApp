@@ -6,4 +6,5 @@ public interface AudioService {
     List<Audio> findAll();
     void createAudio(Audio audio);
     Audio getAudioById(Long id);
+    boolean deleteAudio(Long id);
 }
