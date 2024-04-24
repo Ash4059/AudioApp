@@ -7,4 +7,5 @@ public interface AudioService {
     void createAudio(Audio audio);
     Audio getAudioById(Long id);
     boolean deleteAudio(Long id);
+    boolean updateAudio(Audio audio);
 }

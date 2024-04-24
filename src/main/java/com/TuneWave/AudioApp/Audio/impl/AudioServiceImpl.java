@@ -18,6 +18,15 @@ public class AudioServiceImpl implements AudioService {
         return Audios;
     }
 
+    int getIdxById(Long id) {
+        for (int i = 0; i < Audios.size(); i++) {
+            if (Audios.get(i).getId() == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
     public void createAudio(Audio audio) {
         audio.setId(nextId++);
@@ -32,5 +41,15 @@ public class AudioServiceImpl implements AudioService {
     @Override
     public boolean deleteAudio(Long id) {
         return Audios.removeIf(audio -> audio.getId() == id);
+    }
+
+    @Override
+    public boolean updateAudio(Audio audio) {
+        int idx = getIdxById(audio.getId());
+        if (idx == -1) {
+            return false;
+        }
+        Audios.set(idx, audio);
+        return true;
     }
 }
