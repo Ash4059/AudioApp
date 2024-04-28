@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/audios")
 public class AudioController {
 
     private final AudioService audioService;
@@ -15,24 +16,24 @@ public class AudioController {
         this.audioService = audioService;
     }
 
-    @GetMapping("/audios")
+    @GetMapping
     public ResponseEntity<List<Audio>> findAll() {
         return ResponseEntity.ok(audioService.findAll());
     }
 
-    @PostMapping("/audio")
+    @PostMapping
     public ResponseEntity<String> addAudio(@RequestBody Audio audio) {
         audioService.createAudio(audio);
         return new ResponseEntity<String>("Audio added successfully!", HttpStatus.OK);
     }
 
-    @GetMapping("/audio/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Audio> getAudioById(@PathVariable Long id) {
         Audio audio = audioService.getAudioById(id);
         return new ResponseEntity<Audio>(audio, audio != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/audio/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAudio(@PathVariable Long id) {
         boolean deleted = audioService.deleteAudio(id);
         if (deleted) {
@@ -41,8 +42,8 @@ public class AudioController {
         return new ResponseEntity<String>("Audio not found", HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/audio/{id}")
-    public ResponseEntity<String> updateAudio(@PathVariable Long id, @RequestBody Audio audio) {
+    @PutMapping
+    public ResponseEntity<String> updateAudio(@RequestBody Audio audio) {
         boolean updated = audioService.updateAudio(audio);
         if (updated) {
             return new ResponseEntity<String>("Audio updated successfully!", HttpStatus.OK);

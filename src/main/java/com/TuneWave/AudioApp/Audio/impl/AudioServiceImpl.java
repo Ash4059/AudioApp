@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class AudioServiceImpl implements AudioService {
 
-    private List<Audio> Audios = new ArrayList<>();
+    private final List<Audio> Audios = new ArrayList<>();
     private static long nextId = 1;
 
     @Override
