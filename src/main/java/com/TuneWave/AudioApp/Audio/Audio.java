@@ -1,27 +1,38 @@
 package com.TuneWave.AudioApp.Audio;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+@Entity
 public class Audio {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     String title;
     String description;
-    Duration timeSpan = Duration.of(0, ChronoUnit.MINUTES);
+    Duration duration = Duration.of(0, ChronoUnit.MINUTES);
     String artistId;
     String imageUrl;
     String audioUrl;
 
-    public Audio(String title, long id, String description, String timeSpan, String artistId, String imageUrl, String audioUrl) {
+    public Audio(){
+
+    }
+
+    public Audio(String title, long id, String description, String duration, String artistId, String imageUrl, String audioUrl) {
         this.title = title;
         this.id = id;
         this.description = description;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalTime time = LocalTime.parse(timeSpan, formatter);
-        this.timeSpan = this.timeSpan.plusMinutes(time.getMinute()).plusSeconds(time.getSecond());
+        LocalTime time = LocalTime.parse(duration, formatter);
+        this.duration = this.duration.plusMinutes(time.getMinute()).plusSeconds(time.getSecond());
         this.artistId = artistId;
         this.imageUrl = imageUrl;
         this.audioUrl = audioUrl;
@@ -51,12 +62,12 @@ public class Audio {
         this.description = description;
     }
 
-    public Duration getTimeSpan() {
-        return timeSpan;
+    public Duration getDuration() {
+        return duration;
     }
 
-    public void setTimeSpan(Duration timeSpan) {
-        this.timeSpan = timeSpan;
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 
     public String getArtistId() {

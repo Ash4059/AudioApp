@@ -1,55 +1,61 @@
 package com.TuneWave.AudioApp.Audio.impl;
 
 import com.TuneWave.AudioApp.Audio.Audio;
+import com.TuneWave.AudioApp.Audio.AudioRepository;
 import com.TuneWave.AudioApp.Audio.AudioService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AudioServiceImpl implements AudioService {
 
-    private final List<Audio> Audios = new ArrayList<>();
-    private static long nextId = 1;
+    AudioRepository audioRepository;
+
+    public AudioServiceImpl(AudioRepository audioRepository){
+        this.audioRepository = audioRepository;
+    }
 
     @Override
     public List<Audio> findAll() {
-        return Audios;
-    }
-
-    int getIdxById(Long id) {
-        for (int i = 0; i < Audios.size(); i++) {
-            if (Audios.get(i).getId() == id) {
-                return i;
-            }
-        }
-        return -1;
+        return audioRepository.findAll();
     }
 
     @Override
     public void createAudio(Audio audio) {
-        audio.setId(nextId++);
-        Audios.add(audio);
+        audioRepository.save(audio);
     }
 
     @Override
     public Audio getAudioById(Long id){
-        return Audios.stream().filter(audio -> audio.getId() == id).findFirst().orElse(null);
+        return audioRepository.findById(id).orElse(null);
     }
 
     @Override
     public boolean deleteAudio(Long id) {
-        return Audios.removeIf(audio -> audio.getId() == id);
+        try{
+            audioRepository.deleteById(id);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
     @Override
     public boolean updateAudio(Audio audio) {
-        int idx = getIdxById(audio.getId());
-        if (idx == -1) {
-            return false;
+        Optional<Audio> audioOptional = audioRepository.findById(audio.getId());
+        if(audioOptional.isPresent()){
+            Audio oAudio = audioOptional.get();
+            oAudio.setTitle(audio.getTitle());
+            oAudio.setDescription(audio.getDescription());
+            oAudio.setImageUrl(audio.getImageUrl());
+            oAudio.setAudioUrl(audio.getAudioUrl());
+            oAudio.setArtistId(audio.getArtistId());
+            oAudio.setDuration(audio.getDuration());
+            audioRepository.save(oAudio);
+            return true;
         }
-        Audios.set(idx, audio);
-        return true;
+        return false;
     }
 }
