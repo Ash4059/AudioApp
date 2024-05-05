@@ -1,57 +1,61 @@
 package com.TuneWave.AudioApp.User.impl;
 
 import com.TuneWave.AudioApp.User.User;
-import com.TuneWave.AudioApp.User.ArtistRepository;
-import com.TuneWave.AudioApp.User.ArtistService;
+import com.TuneWave.AudioApp.User.UserRepository;
+import com.TuneWave.AudioApp.User.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ArtistServiceImpl implements ArtistService {
+public class UserServiceImpl implements UserService {
 
-    ArtistRepository artistRepository;
+    UserRepository userRepository;
 
-    public ArtistServiceImpl(ArtistRepository artistRepository){
-        this.artistRepository = artistRepository;
+    public UserServiceImpl(UserRepository userRepository){
+        this.userRepository = userRepository;
     }
 
     @Override
-    public List<User> getAllArtist() {
-        return artistRepository.findAll();
+    public List<User> getAllUser() {
+        return userRepository.findAll();
     }
 
     @Override
-    public void addArtist(User user) {
-        artistRepository.save(user);
+    public void addUser(User user) {
+        userRepository.save(user);
     }
 
     @Override
-    public User getArtistById(Long Id) {
-        Optional<User> artistOptional = artistRepository.findById(Id);
+    public User getUserById(Long Id) {
+        Optional<User> artistOptional = userRepository.findById(Id);
         return artistOptional.orElse(null);
     }
 
     @Override
-    public boolean updateArtist(User user) {
-        Optional<User> artistOptional = artistRepository.findById(user.getId());
+    public boolean updateUser(User user) {
+        Optional<User> artistOptional = userRepository.findById(user.getId());
         if(artistOptional.isPresent()){
             User oUser = artistOptional.get();
-            oUser.setName(user.getName());
+            oUser.setFirstName(user.getFirstName());
+            oUser.setLastName(user.getLastName());
+            oUser.setUserName(user.getUserName());
+            oUser.setEmailId(user.getEmailId());
+            oUser.setPassword(user.getPassword());
             oUser.setAge(user.getAge());
             oUser.setCountry(user.getCountry());
-            artistRepository.save(oUser);
+            userRepository.save(oUser);
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean deleteArtist(Long Id) {
-        Optional<User> artistOptional = artistRepository.findById(Id);
+    public boolean deleteUser(Long Id) {
+        Optional<User> artistOptional = userRepository.findById(Id);
         if(artistOptional.isPresent()){
-            artistRepository.deleteById(Id);
+            userRepository.deleteById(Id);
             return  true;
         }
         return false;

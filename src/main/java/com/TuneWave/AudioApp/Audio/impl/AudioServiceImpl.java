@@ -51,7 +51,6 @@ public class AudioServiceImpl implements AudioService {
             oAudio.setDescription(audio.getDescription());
             oAudio.setImageUrl(audio.getImageUrl());
             oAudio.setAudioUrl(audio.getAudioUrl());
-            oAudio.setArtistId(audio.getArtistId());
             oAudio.setDuration(audio.getDuration());
             audioRepository.save(oAudio);
             return true;

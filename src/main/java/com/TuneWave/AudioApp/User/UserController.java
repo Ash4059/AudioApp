@@ -7,29 +7,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/artists")
-public class ArtistController {
+@RequestMapping("/users")
+public class UserController {
 
-    private final ArtistService artistService;
+    private final UserService userService;
 
-    public ArtistController(ArtistService artistService){
-        this.artistService = artistService;
+    public UserController( UserService userService ){
+        this.userService = userService;
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllArtist(){
-        return new ResponseEntity<>(artistService.getAllArtist(), HttpStatus.OK);
+    public ResponseEntity<List<User>> getAllUser(){
+        return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<String> addArtist(@RequestBody User user){
-         artistService.addArtist(user);
-         return new ResponseEntity<>("Artist added successfully!", HttpStatus.OK);
+    public ResponseEntity<String> addUser(@RequestBody User user){
+         userService.addUser(user);
+         return new ResponseEntity<>("User added successfully!", HttpStatus.OK);
     }
 
     @GetMapping("/{Id}")
-    public ResponseEntity<User> findArtistBId(@PathVariable Long Id){
-        User user = artistService.getArtistById(Id);
+    public ResponseEntity<User> findUserBId(@PathVariable Long Id){
+        User user = userService.getUserById(Id);
         if(user == null){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
@@ -37,18 +37,18 @@ public class ArtistController {
     }
 
     @PutMapping
-    public ResponseEntity<String> updateArtist(@RequestBody User user){
-        if(artistService.updateArtist(user)){
-            return new ResponseEntity<>("Artist updated successfully!", HttpStatus.OK);
+    public ResponseEntity<String> updateUser(@RequestBody User user){
+        if(userService.updateUser(user)){
+            return new ResponseEntity<>("User updated successfully!", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Artist not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{Id}")
-    public ResponseEntity<String> deleteArtist(@PathVariable Long Id){
-        if(artistService.deleteArtist(Id)){
-            return new ResponseEntity<>("Artist deleted successfully", HttpStatus.OK);
+    public ResponseEntity<String> deleteUser(@PathVariable Long Id){
+        if(userService.deleteUser(Id)){
+            return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Artist not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
     }
 }
