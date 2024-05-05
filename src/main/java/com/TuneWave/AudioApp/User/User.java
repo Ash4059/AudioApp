@@ -1,12 +1,13 @@
-package com.TuneWave.AudioApp.Artist;
+package com.TuneWave.AudioApp.User;
 
 import com.TuneWave.AudioApp.Audio.Audio;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
-public class Artist {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -55,18 +56,18 @@ public class Artist {
     private int age;
     private String country;
 
-    @ManyToMany
+    @JsonIgnore
+    @OneToMany(mappedBy = "artist")
     private List<Audio> audio;
 
     public Artist(){
 
     }
 
-    public Artist(long id, String name, int age, String country, List<Audio> audio) {
+    public Artist(long id, String name, int age, String country) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.country = country;
-        this.audio = audio;
     }
 }
