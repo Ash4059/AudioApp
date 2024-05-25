@@ -2,12 +2,14 @@ package com.TuneWave.AudioApp.Audio;
 
 import com.TuneWave.AudioApp.Reviews.Review;
 import com.TuneWave.AudioApp.User.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -21,6 +23,7 @@ public class Audio {
     String imageUrl;
     String audioUrl;
 
+    @JsonBackReference
     @ManyToOne
     private User user;
 
@@ -32,14 +35,15 @@ public class Audio {
     }
 
     public Audio(String title, long id, String description, String duration, String imageUrl, String audioUrl) {
-        this.title = title;
         this.id = id;
+        this.title = title;
         this.description = description;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalTime time = LocalTime.parse(duration, formatter);
         this.duration = this.duration.plusMinutes(time.getMinute()).plusSeconds(time.getSecond());
         this.imageUrl = imageUrl;
         this.audioUrl = audioUrl;
+        this.reviews = new LinkedList<>();
     }
     
     public long getId() {

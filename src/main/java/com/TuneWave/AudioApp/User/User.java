@@ -2,10 +2,10 @@ package com.TuneWave.AudioApp.User;
 
 import com.TuneWave.AudioApp.Audio.Audio;
 import com.TuneWave.AudioApp.Country;
-import com.TuneWave.AudioApp.Reviews.Review;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -14,29 +14,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String firstName;
-    private String LastName;
+    private String lastName;
     private String userName;
     private String emailId;
-    private String Password;
+    private String password;
     boolean isArtist = false;
     private int age;
     private Country country;
 
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private List<Audio> audio;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<Review> reviews;
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
-    }
 
     public long getId() {
         return id;
@@ -59,7 +47,7 @@ public class User {
     }
 
     public List<Audio> getAudio() {
-        return audio;
+        return this.audio;
     }
 
     public void setAudio(List<Audio> audio) {
@@ -75,11 +63,11 @@ public class User {
     }
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-        LastName = lastName;
+        this.lastName = lastName;
     }
 
     public String getUserName() {
@@ -99,11 +87,11 @@ public class User {
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
     public void setPassword(String password) {
-        Password = password;
+        this.password = password;
     }
 
     public boolean isArtist() {
@@ -111,7 +99,7 @@ public class User {
     }
 
     public void setArtist(boolean artist) {
-        isArtist = artist;
+        this.isArtist = artist;
     }
 
     public User() {
@@ -121,24 +109,13 @@ public class User {
             int age, Country country) {
         this.id = id;
         this.firstName = firstName;
-        LastName = lastName;
+        this.lastName = lastName;
         this.userName = userName;
         this.emailId = emailId;
-        Password = password;
+        this.password = password;
         this.age = age;
         this.country = country;
+        this.audio = new LinkedList<>();
     }
 
-    public User(long id, String firstName, String lastName, String userName, String emailId, String password,
-            boolean isArtist, int age, Country country) {
-        this.id = id;
-        this.firstName = firstName;
-        LastName = lastName;
-        this.userName = userName;
-        this.emailId = emailId;
-        Password = password;
-        this.isArtist = isArtist;
-        this.age = age;
-        this.country = country;
-    }
 }

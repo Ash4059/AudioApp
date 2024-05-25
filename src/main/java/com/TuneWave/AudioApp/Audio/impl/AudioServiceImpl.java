@@ -3,6 +3,8 @@ package com.TuneWave.AudioApp.Audio.impl;
 import com.TuneWave.AudioApp.Audio.Audio;
 import com.TuneWave.AudioApp.Audio.AudioRepository;
 import com.TuneWave.AudioApp.Audio.AudioService;
+import com.TuneWave.AudioApp.User.User;
+import com.TuneWave.AudioApp.User.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,10 +13,12 @@ import java.util.Optional;
 @Service
 public class AudioServiceImpl implements AudioService {
 
-    AudioRepository audioRepository;
+    private final AudioRepository audioRepository;
+    private final UserService userService;
 
-    public AudioServiceImpl(AudioRepository audioRepository){
+    public AudioServiceImpl(AudioRepository audioRepository, UserService userService){
         this.audioRepository = audioRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -23,8 +27,17 @@ public class AudioServiceImpl implements AudioService {
     }
 
     @Override
-    public void createAudio(Audio audio) {
-        audioRepository.save(audio);
+    public boolean createAudio(Audio audio) {
+        User user = userService.getUserById(audio.getUser().getId());
+        if(user != null ){
+            if(!user.isArtist()){
+                user.setArtist(true);
+            }
+            userService.updateUser(user);
+            audioRepository.save(audio);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -35,6 +48,12 @@ public class AudioServiceImpl implements AudioService {
     @Override
     public boolean deleteAudio(Long id) {
         try{
+            Optional<Audio> audioOptional = audioRepository.findById(id);
+            if(audioOptional.isPresent()){
+                Audio oAudio = audioOptional.get();
+                oAudio.getUser().getAudio().remove(oAudio);
+                userService.updateUser(oAudio.getUser());
+            }
             audioRepository.deleteById(id);
             return true;
         }catch (Exception e){

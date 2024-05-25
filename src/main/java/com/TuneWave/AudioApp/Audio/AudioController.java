@@ -23,8 +23,11 @@ public class AudioController {
 
     @PostMapping
     public ResponseEntity<String> addAudio(@RequestBody Audio audio) {
-        audioService.createAudio(audio);
-        return new ResponseEntity<String>("Audio added successfully!", HttpStatus.OK);
+        boolean isAdded = audioService.createAudio(audio);
+        if(isAdded){
+            return new ResponseEntity<String>("Audio added successfully!", HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Audio can't be added", HttpStatus.NOT_ACCEPTABLE);
     }
 
     @GetMapping("/{id}")

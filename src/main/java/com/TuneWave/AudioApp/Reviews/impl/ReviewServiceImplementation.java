@@ -5,7 +5,6 @@ import com.TuneWave.AudioApp.Audio.AudioService;
 import com.TuneWave.AudioApp.Reviews.Review;
 import com.TuneWave.AudioApp.Reviews.ReviewRepository;
 import com.TuneWave.AudioApp.Reviews.ReviewService;
-import com.TuneWave.AudioApp.User.User;
 import com.TuneWave.AudioApp.User.UserService;
 
 import java.util.List;
@@ -15,13 +14,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ReviewServiceImplementation implements ReviewService {
-
     private final AudioService audioService;
     ReviewRepository reviewRepository;
 
     public ReviewServiceImplementation(AudioService audioService, ReviewRepository reviewRepository) {
-        this.reviewRepository = reviewRepository;
         this.audioService = audioService;
+        this.reviewRepository = reviewRepository;
     }
 
     @Override
@@ -31,9 +29,9 @@ public class ReviewServiceImplementation implements ReviewService {
 
     @Override
     public boolean addReview(Long audioId, Review review) {
-        Audio audio = audioService.getAudioById(audioId);
-        if (audio != null) {
-            review.setAudio(audio);
+        Optional<Audio> audioOptional = Optional.of(audioService.getAudioById(audioId));
+        if (audioOptional.isPresent()) {
+            review.setAudio(audioOptional.get());
             reviewRepository.save(review);
             return true;
         }
