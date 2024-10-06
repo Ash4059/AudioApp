@@ -1,10 +1,14 @@
 package com.TuneWave.AudioApp.User.impl;
 
+import com.TuneWave.AudioApp.User.MyUserDetailService;
 import com.TuneWave.AudioApp.User.User;
 import com.TuneWave.AudioApp.User.UserRepository;
 import com.TuneWave.AudioApp.User.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(User user) {
+        user.setPassword(encodePassword(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -42,7 +47,7 @@ public class UserServiceImpl implements UserService {
             oUser.setLastName(user.getLastName());
             oUser.setUserName(user.getUserName());
             oUser.setEmailId(user.getEmailId());
-            oUser.setPassword(user.getPassword());
+            oUser.setPassword(encodePassword(user.getPassword()));
             oUser.setAge(user.getAge());
             oUser.setCountry(user.getCountry());
             userRepository.save(oUser);
@@ -59,5 +64,22 @@ public class UserServiceImpl implements UserService {
             return  true;
         }
         return false;
+    }
+
+    @Override
+    public User getUserByUserName(String userName){
+        Optional<User> userOptional = userRepository.findByUserName(userName);
+        return userOptional.orElse(null);
+    }
+
+    public String encodePassword(String password){
+        StringBuilder Password = new StringBuilder();
+        try {
+            BCryptPasswordEncoder encoder = MyUserDetailService.getPasswordEncoder();
+            Password.append(encoder.encode(password));
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+            throw new RuntimeException(e);
+        }
+        return Password.toString();
     }
 }

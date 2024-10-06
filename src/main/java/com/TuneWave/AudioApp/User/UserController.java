@@ -21,7 +21,7 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<String> addUser(@RequestBody User user){
          userService.addUser(user);
          return new ResponseEntity<>("User added successfully!", HttpStatus.OK);
@@ -36,7 +36,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody User user){
         if(userService.updateUser(user)){
             return new ResponseEntity<>("User updated successfully!", HttpStatus.OK);
