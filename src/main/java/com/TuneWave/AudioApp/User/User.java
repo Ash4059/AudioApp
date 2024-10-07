@@ -4,7 +4,11 @@ import com.TuneWave.AudioApp.Audio.Audio;
 import com.TuneWave.AudioApp.Country;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,6 +25,7 @@ public class User {
     boolean isArtist = false;
     private int age;
     private Country country;
+    private static BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "user")
@@ -116,6 +121,18 @@ public class User {
         this.age = age;
         this.country = country;
         this.audio = new LinkedList<>();
+    }
+
+    public static BCryptPasswordEncoder getPasswordEncoder(){
+        if(bCryptPasswordEncoder == null){
+            try {
+                bCryptPasswordEncoder = new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 12,
+                        SecureRandom.getInstance("SHA1PRNG","SUN"));
+            } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return bCryptPasswordEncoder;
     }
 
 }

@@ -74,12 +74,8 @@ public class UserServiceImpl implements UserService {
 
     public String encodePassword(String password){
         StringBuilder Password = new StringBuilder();
-        try {
-            BCryptPasswordEncoder encoder = MyUserDetailService.getPasswordEncoder();
-            Password.append(encoder.encode(password));
-        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
-            throw new RuntimeException(e);
-        }
+        BCryptPasswordEncoder encoder = User.getPasswordEncoder();
+        Password.append(encoder.encode(password));
         return Password.toString();
     }
 }

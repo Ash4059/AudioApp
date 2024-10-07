@@ -1,6 +1,7 @@
 package com.TuneWave.AudioApp.Config;
 
 import com.TuneWave.AudioApp.User.MyUserDetailService;
+import com.TuneWave.AudioApp.User.User;
 import com.TuneWave.AudioApp.User.UserPrincipal;
 import com.TuneWave.AudioApp.User.impl.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -12,13 +13,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +33,10 @@ public class SecurityConfig {
         // disable Cross-Site Request Forgery (CSRF) protection.
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
         // Authenticate all the request
-        .authorizeHttpRequests(request -> request.anyRequest().authenticated())
+        .authorizeHttpRequests(request -> {
+            request.requestMatchers("/users/register").permitAll();
+            request.anyRequest().authenticated();
+        })
         // way to enable HTTP Basic Authentication using all the default settings provided by Spring Security
         .httpBasic(Customizer.withDefaults())
         // Making http request stateless. So new session will be created for each request.
@@ -48,7 +49,7 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider() throws NoSuchAlgorithmException, NoSuchProviderException {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         //Passing password encoder to provider
-        provider.setPasswordEncoder(MyUserDetailService.getPasswordEncoder());
+        provider.setPasswordEncoder(User.getPasswordEncoder());
         provider.setUserDetailsService(userDetailService);
         return provider;
     }
