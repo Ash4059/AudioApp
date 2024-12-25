@@ -1,6 +1,5 @@
 package com.TuneWave.AudioApp.Service.Implementation;
 
-import com.TuneWave.AudioApp.Config.JWTService;
 import com.TuneWave.AudioApp.Entity.User;
 import com.TuneWave.AudioApp.Repository.UserRepository;
 import com.TuneWave.AudioApp.Service.UserService;

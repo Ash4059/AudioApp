@@ -1,4 +1,4 @@
-package com.TuneWave.AudioApp.Config;
+package com.TuneWave.AudioApp.Service.Implementation;
 
 import com.TuneWave.AudioApp.Entity.User;
 import io.jsonwebtoken.Claims;
@@ -34,9 +34,9 @@ public class JWTService {
     }
 
     // Validate token with User
-    public Boolean ValidateToken(String token, User user){
+    public Boolean ValidateToken(String token, String user){
         final String userName = extractUserName(token);
-        return user.getUserName().equals(userName) && !isTokenExpired(token);
+        return user.equals(userName) && !isTokenExpired(token);
     }
 
     // Check token is expired

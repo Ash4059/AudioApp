@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -25,9 +26,11 @@ import java.security.NoSuchProviderException;
 public class SecurityConfig {
 
     private final MyUserDetailService userDetailService;
+    private final JwtFilter jwtFilter;
 
-    public SecurityConfig(MyUserDetailService userDetailService){
+    public SecurityConfig(MyUserDetailService userDetailService, JwtFilter jwtFilter){
         this.userDetailService = userDetailService;
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean
@@ -43,7 +46,8 @@ public class SecurityConfig {
         .httpBasic(Customizer.withDefaults())
         // Making http request stateless. So new session will be created for each request.
         .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return  httpSecurity.build();
     }
 
