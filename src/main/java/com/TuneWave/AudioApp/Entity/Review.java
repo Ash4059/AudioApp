@@ -1,7 +1,5 @@
-package com.TuneWave.AudioApp.Reviews;
+package com.TuneWave.AudioApp.Entity;
 
-import com.TuneWave.AudioApp.Audio.Audio;
-import com.TuneWave.AudioApp.User.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;

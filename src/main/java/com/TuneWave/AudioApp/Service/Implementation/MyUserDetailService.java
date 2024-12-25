@@ -1,7 +1,7 @@
-package com.TuneWave.AudioApp.User;
+package com.TuneWave.AudioApp.Service.Implementation;
 
-import com.TuneWave.AudioApp.User.impl.UserServiceImpl;
-import org.springframework.context.annotation.Bean;
+import com.TuneWave.AudioApp.Entity.User;
+import com.TuneWave.AudioApp.Entity.UserPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

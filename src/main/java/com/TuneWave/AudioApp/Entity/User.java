@@ -1,6 +1,5 @@
-package com.TuneWave.AudioApp.User;
+package com.TuneWave.AudioApp.Entity;
 
-import com.TuneWave.AudioApp.Audio.Audio;
 import com.TuneWave.AudioApp.Country;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -9,21 +8,31 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class User {
     @Id
+    @Column(name = "ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
+
+    @Column(nullable = false)
     private String userName;
+
+    @Column(unique = true, length = 100, nullable = false)
     private String emailId;
+
+    @Column(nullable = false)
     private String password;
     boolean isArtist = false;
-    private int age;
+    private Date birthDate;
     private Country country;
     private static BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -31,16 +40,19 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Audio> audio;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<UserRole> roleSet = new HashSet<>();
+
     public long getId() {
         return id;
     }
 
-    public int getAge() {
-        return age;
+    public Date getBirthDate() {
+        return birthDate;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setBirthDate(Date age) {
+        this.birthDate = birthDate;
     }
 
     public Country getCountry() {
@@ -107,18 +119,26 @@ public class User {
         this.isArtist = artist;
     }
 
+    public Set<UserRole> getRoleSet() {
+        return roleSet;
+    }
+
+    public void setRoleSet(Set<UserRole> roleSet) {
+        this.roleSet = roleSet;
+    }
+
     public User() {
     }
 
     public User(long id, String firstName, String lastName, String userName, String emailId, String password,
-            int age, Country country) {
+            Date birthDate, Country country) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
         this.emailId = emailId;
         this.password = password;
-        this.age = age;
+        this.birthDate = birthDate;
         this.country = country;
         this.audio = new LinkedList<>();
     }
@@ -134,5 +154,4 @@ public class User {
         }
         return bCryptPasswordEncoder;
     }
-
 }

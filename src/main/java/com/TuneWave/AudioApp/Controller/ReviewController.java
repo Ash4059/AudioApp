@@ -1,7 +1,9 @@
-package com.TuneWave.AudioApp.Reviews;
+package com.TuneWave.AudioApp.Controller;
 
 import java.util.List;
 
+import com.TuneWave.AudioApp.Entity.Review;
+import com.TuneWave.AudioApp.Service.ReviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

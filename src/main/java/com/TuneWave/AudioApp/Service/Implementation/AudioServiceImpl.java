@@ -1,10 +1,10 @@
-package com.TuneWave.AudioApp.Audio.impl;
+package com.TuneWave.AudioApp.Service.Implementation;
 
-import com.TuneWave.AudioApp.Audio.Audio;
-import com.TuneWave.AudioApp.Audio.AudioRepository;
-import com.TuneWave.AudioApp.Audio.AudioService;
-import com.TuneWave.AudioApp.User.User;
-import com.TuneWave.AudioApp.User.UserService;
+import com.TuneWave.AudioApp.Entity.Audio;
+import com.TuneWave.AudioApp.Repository.AudioRepository;
+import com.TuneWave.AudioApp.Service.AudioService;
+import com.TuneWave.AudioApp.Entity.User;
+import com.TuneWave.AudioApp.Service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

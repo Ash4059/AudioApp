@@ -1,5 +1,7 @@
-package com.TuneWave.AudioApp.Audio;
+package com.TuneWave.AudioApp.Controller;
 
+import com.TuneWave.AudioApp.Entity.Audio;
+import com.TuneWave.AudioApp.Service.AudioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

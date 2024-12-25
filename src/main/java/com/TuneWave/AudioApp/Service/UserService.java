@@ -1,4 +1,6 @@
-package com.TuneWave.AudioApp.User;
+package com.TuneWave.AudioApp.Service;
+
+import com.TuneWave.AudioApp.Entity.User;
 
 import java.util.List;
 
@@ -9,4 +11,5 @@ public interface UserService {
     boolean updateUser(User user);
     boolean deleteUser(Long id);
     User getUserByUserName(String userName);
+    String VerifyUser(User user);
 }

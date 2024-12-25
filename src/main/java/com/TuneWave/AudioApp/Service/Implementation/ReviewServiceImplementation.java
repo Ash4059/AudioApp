@@ -1,11 +1,10 @@
-package com.TuneWave.AudioApp.Reviews.impl;
+package com.TuneWave.AudioApp.Service.Implementation;
 
-import com.TuneWave.AudioApp.Audio.Audio;
-import com.TuneWave.AudioApp.Audio.AudioService;
-import com.TuneWave.AudioApp.Reviews.Review;
-import com.TuneWave.AudioApp.Reviews.ReviewRepository;
-import com.TuneWave.AudioApp.Reviews.ReviewService;
-import com.TuneWave.AudioApp.User.UserService;
+import com.TuneWave.AudioApp.Entity.Audio;
+import com.TuneWave.AudioApp.Service.AudioService;
+import com.TuneWave.AudioApp.Entity.Review;
+import com.TuneWave.AudioApp.Repository.ReviewRepository;
+import com.TuneWave.AudioApp.Service.ReviewService;
 
 import java.util.List;
 import java.util.Optional;

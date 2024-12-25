@@ -1,4 +1,6 @@
-package com.TuneWave.AudioApp.Audio;
+package com.TuneWave.AudioApp.Service;
+
+import com.TuneWave.AudioApp.Entity.Audio;
 
 import java.util.List;
 

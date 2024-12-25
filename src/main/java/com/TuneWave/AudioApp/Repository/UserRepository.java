@@ -1,5 +1,6 @@
-package com.TuneWave.AudioApp.User;
+package com.TuneWave.AudioApp.Repository;
 
+import com.TuneWave.AudioApp.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

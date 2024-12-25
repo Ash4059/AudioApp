@@ -1,4 +1,4 @@
-package com.TuneWave.AudioApp.Reviews;
+package com.TuneWave.AudioApp.Entity;
 
 public enum Rating {
     POOR(1),

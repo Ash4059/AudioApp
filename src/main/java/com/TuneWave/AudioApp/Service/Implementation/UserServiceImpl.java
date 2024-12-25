@@ -1,24 +1,34 @@
-package com.TuneWave.AudioApp.User.impl;
+package com.TuneWave.AudioApp.Service.Implementation;
 
-import com.TuneWave.AudioApp.User.MyUserDetailService;
-import com.TuneWave.AudioApp.User.User;
-import com.TuneWave.AudioApp.User.UserRepository;
-import com.TuneWave.AudioApp.User.UserService;
+import com.TuneWave.AudioApp.Config.JWTService;
+import com.TuneWave.AudioApp.Entity.User;
+import com.TuneWave.AudioApp.Repository.UserRepository;
+import com.TuneWave.AudioApp.Service.UserService;
+
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository){
+    private final AuthenticationManager authenticationManager;
+
+    private final JWTService jwtService;
+
+    public UserServiceImpl(UserRepository userRepository, JWTService jwtService, @Lazy AuthenticationManager authenticationManager){
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
     @Override
@@ -34,8 +44,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long Id) {
-        Optional<User> artistOptional = userRepository.findById(Id);
-        return artistOptional.orElse(null);
+        Optional<User> userOptional = userRepository.findById(Id);
+        return userOptional.orElse(null);
     }
 
     @Override
@@ -48,7 +58,7 @@ public class UserServiceImpl implements UserService {
             oUser.setUserName(user.getUserName());
             oUser.setEmailId(user.getEmailId());
             oUser.setPassword(encodePassword(user.getPassword()));
-            oUser.setAge(user.getAge());
+            oUser.setBirthDate(user.getBirthDate());
             oUser.setCountry(user.getCountry());
             userRepository.save(oUser);
             return true;
@@ -70,6 +80,17 @@ public class UserServiceImpl implements UserService {
     public User getUserByUserName(String userName){
         Optional<User> userOptional = userRepository.findByUserName(userName);
         return userOptional.orElse(null);
+    }
+
+    @Override
+    public String VerifyUser(User user){
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword())
+        );
+        if(authentication.isAuthenticated()){
+            return jwtService.GenerateToken(user);
+        }
+        throw new NoSuchElementException("User not found with username: " + user.getUserName());
     }
 
     public String encodePassword(String password){

@@ -1,4 +1,6 @@
-package com.TuneWave.AudioApp.Reviews;
+package com.TuneWave.AudioApp.Service;
+
+import com.TuneWave.AudioApp.Entity.Review;
 
 import java.util.List;
 
