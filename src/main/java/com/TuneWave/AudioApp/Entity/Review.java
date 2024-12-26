@@ -16,19 +16,18 @@ public class Review {
     Rating rating;
     String review;
 
-    @JsonIgnore
     @ManyToOne
+    @JsonIgnore
     private Audio audio;
 
-    @JsonIgnore
     @ManyToOne
+    @JsonIgnore
     private User user;
 
-    public Review(){
-
+    public Review() {
     }
 
-    public Review(long id,Rating rating, String review) {
+    public Review(long id, Rating rating, String review) {
         this.id = id;
         this.rating = rating;
         this.review = review;

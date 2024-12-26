@@ -28,39 +28,35 @@ public class SecurityConfig {
     private final MyUserDetailService userDetailService;
     private final JwtFilter jwtFilter;
 
-    public SecurityConfig(MyUserDetailService userDetailService, JwtFilter jwtFilter){
+    public SecurityConfig(MyUserDetailService userDetailService, JwtFilter jwtFilter) {
         this.userDetailService = userDetailService;
         this.jwtFilter = jwtFilter;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        // disable Cross-Site Request Forgery (CSRF) protection.
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
-        // Authenticate all the request
-        .authorizeHttpRequests(request -> {
-            request.requestMatchers("/users/register", "/users/login").permitAll();
-            request.anyRequest().authenticated();
-        })
-        // way to enable HTTP Basic Authentication using all the default settings provided by Spring Security
-        .httpBasic(Customizer.withDefaults())
-        // Making http request stateless. So new session will be created for each request.
-        .sessionManagement(session ->
+            .authorizeHttpRequests(request -> {
+                request.requestMatchers("/users/register", "/users/login").permitAll();
+                request.anyRequest().authenticated();
+            })
+            .httpBasic(Customizer.withDefaults())
+            .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        return  httpSecurity.build();
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        return httpSecurity.build();
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer(){
+    public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:1234")
-                        .allowedMethods("GET","POST","PUT","DELETE")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
+                    .allowedOrigins("http://localhost:1234")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE")
+                    .allowedHeaders("*")
+                    .allowCredentials(true);
             }
         };
     }
@@ -68,7 +64,6 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() throws NoSuchAlgorithmException, NoSuchProviderException {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        //Passing password encoder to provider
         provider.setPasswordEncoder(User.getPasswordEncoder());
         provider.setUserDetailsService(userDetailService);
         return provider;

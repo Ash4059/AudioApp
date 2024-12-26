@@ -26,9 +26,9 @@ public class Audio {
     private User user;
 
     @OneToMany(mappedBy = "audio")
-    private List<Review> reviews;
+    private List<Review> reviews = new LinkedList<>();
     
-    public Audio(){
+    public Audio() {
 
     }
 
@@ -41,7 +41,6 @@ public class Audio {
         this.duration = this.duration.plusMinutes(time.getMinute()).plusSeconds(time.getSecond());
         this.imageUrl = imageUrl;
         this.audioUrl = audioUrl;
-        this.reviews = new LinkedList<>();
     }
     
     public long getId() {

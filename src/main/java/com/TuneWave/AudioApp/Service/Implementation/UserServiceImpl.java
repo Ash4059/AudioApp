@@ -24,10 +24,13 @@ public class UserServiceImpl implements UserService {
 
     private final JWTService jwtService;
 
+    private final BCryptPasswordEncoder passwordEncoder;
+
     public UserServiceImpl(UserRepository userRepository, JWTService jwtService, @Lazy AuthenticationManager authenticationManager){
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
@@ -37,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(User user) {
-        user.setPassword(encodePassword(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -56,9 +59,11 @@ public class UserServiceImpl implements UserService {
             oUser.setLastName(user.getLastName());
             oUser.setUserName(user.getUserName());
             oUser.setEmailId(user.getEmailId());
-            oUser.setPassword(encodePassword(user.getPassword()));
             oUser.setBirthDate(user.getBirthDate());
             oUser.setCountry(user.getCountry());
+            if(user.getPassword() != null && !user.getPassword().isEmpty()){
+                oUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
             userRepository.save(oUser);
             return true;
         }
@@ -90,12 +95,5 @@ public class UserServiceImpl implements UserService {
             return jwtService.GenerateToken(user);
         }
         throw new NoSuchElementException("User not found with username: " + user.getUserName());
-    }
-
-    public String encodePassword(String password){
-        StringBuilder Password = new StringBuilder();
-        BCryptPasswordEncoder encoder = User.getPasswordEncoder();
-        Password.append(encoder.encode(password));
-        return Password.toString();
     }
 }
