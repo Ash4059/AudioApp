@@ -4,6 +4,7 @@ import com.TuneWave.AudioApp.DTO.UserDTO;
 import com.TuneWave.AudioApp.Entity.User;
 import com.TuneWave.AudioApp.Service.Implementation.JWTService;
 import com.TuneWave.AudioApp.Service.UserService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +61,7 @@ public class UserController {
         }
 
         return ResponseEntity.status(responseStatus)
-                .header("Authorization", jwtToken)
+                .header(HttpHeaders.AUTHORIZATION, jwtToken)
                 .body(userDTO);
     }
 
@@ -86,7 +87,7 @@ public class UserController {
         }
         userDTO = new UserDTO(user);
         return ResponseEntity.status(status)
-                .header("Authorization", token)
+                .header(HttpHeaders.AUTHORIZATION, token)
                 .body(userDTO);
     }
 

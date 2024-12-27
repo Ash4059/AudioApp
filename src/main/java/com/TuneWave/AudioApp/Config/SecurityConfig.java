@@ -56,6 +56,7 @@ public class SecurityConfig {
                     .allowedOrigins("http://localhost:1234")
                     .allowedMethods("GET", "POST", "PUT", "DELETE")
                     .allowedHeaders("*")
+                    .exposedHeaders("Authorization")
                     .allowCredentials(true);
             }
         };
