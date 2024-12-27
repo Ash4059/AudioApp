@@ -1,6 +1,7 @@
 package com.TuneWave.AudioApp.Entity;
 
 import com.TuneWave.AudioApp.Country;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,8 +31,10 @@ public class User {
     private String emailId;
 
     @Column(nullable = false)
-    private String password;
+    private transient String password;
     boolean isArtist = false;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date birthDate;
     private Country country;
     private static BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -51,7 +54,7 @@ public class User {
         return birthDate;
     }
 
-    public void setBirthDate(Date age) {
+    public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 

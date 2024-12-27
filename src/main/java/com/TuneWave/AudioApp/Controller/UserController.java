@@ -1,6 +1,8 @@
 package com.TuneWave.AudioApp.Controller;
 
+import com.TuneWave.AudioApp.DTO.UserDTO;
 import com.TuneWave.AudioApp.Entity.User;
+import com.TuneWave.AudioApp.Service.Implementation.JWTService;
 import com.TuneWave.AudioApp.Service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,14 +11,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.management.RuntimeErrorException;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
+    private final JWTService jwtService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JWTService jwtService) {
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping
@@ -25,35 +31,63 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> addUser(@RequestBody User user) {
-        userService.addUser(user);
-        return new ResponseEntity<>("User added successfully!", HttpStatus.OK);
+    public ResponseEntity<UserDTO> registerUser(@RequestBody User user) {
+        HttpStatus responseStatus = HttpStatus.OK;
+        String jwtToken = "";
+        UserDTO userDTO = null;
+
+        try {
+            // Check if user already exists
+            if (userService.getUserByUserName(user.getUserName()) != null) {
+                throw new RuntimeException("User already exists");
+            }
+
+            // Add the user
+            userService.addUser(user);
+
+            // Generate JWT token
+            jwtToken = jwtService.GenerateToken(user);
+
+            // Map User to UserDTO
+            userDTO = new UserDTO(user);
+
+        } catch (RuntimeException e) {
+            responseStatus = HttpStatus.CONFLICT; // Conflict status for user already exists
+            return ResponseEntity.status(responseStatus).body(null);
+        } catch (Exception exception) {
+            responseStatus = HttpStatus.NOT_ACCEPTABLE;
+            userDTO = null;
+        }
+
+        return ResponseEntity.status(responseStatus)
+                .header("Authorization", jwtToken)
+                .body(userDTO);
     }
 
+
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User user) {
-        String token = null;
-        StringBuilder message = new StringBuilder("Login successful!");
-        HttpStatus status = HttpStatus.OK;
+    public ResponseEntity<UserDTO> loginUser(@RequestBody User user) {
+        User currentUser;
+        String token;
+        HttpStatus status;
+        UserDTO userDTO;
         try {
             token = userService.VerifyUser(user);
+            status = HttpStatus.OK;
+            currentUser = userService.getUserByUserName(user.getUserName());
         } catch (NoSuchElementException e) {
             status = HttpStatus.UNAUTHORIZED;
-            message = new StringBuilder(e.getMessage());
+            currentUser = null;
+            token = null;
         } catch (Exception e) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
-            message = new StringBuilder("An unexpected error occurred.");
+            currentUser = null;
+            token = null;
         }
-        ResponseEntity<String> response;
-        if (token != null) {
-            response = ResponseEntity.status(status)
-                    .header("Authorization", token)
-                    .body(message.toString());
-        } else {
-            response = ResponseEntity.status(status)
-                    .body(message.toString());
-        }
-        return response;
+        userDTO = new UserDTO(user);
+        return ResponseEntity.status(status)
+                .header("Authorization", token)
+                .body(userDTO);
     }
 
     @GetMapping("/{Id}")
