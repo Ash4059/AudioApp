@@ -76,13 +76,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String VerifyUser(User user) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword())
-        );
-        if (authentication.isAuthenticated()) {
-            return jwtService.GenerateToken(user);
-        }
-        throw new NoSuchElementException("User not found with username: " + user.getUserName());
+    public String generateToken(User user) {
+        return jwtService.GenerateToken(user);
     }
+
+    @Override
+    public boolean autheticateUser(String userName, String password) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userName, password)
+        );
+        return authentication.isAuthenticated();
+    }
+
 }

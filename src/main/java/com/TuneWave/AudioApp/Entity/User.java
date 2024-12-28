@@ -24,14 +24,14 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String userName;
 
     @Column(unique = true, length = 100, nullable = false)
     private String emailId;
 
     @Column(nullable = false)
-    private transient String password;
+    private String password;
     boolean isArtist = false;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

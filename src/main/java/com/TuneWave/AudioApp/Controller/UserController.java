@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.management.RuntimeErrorException;
-
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -32,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
         HttpStatus responseStatus = HttpStatus.OK;
         String jwtToken = "";
         UserDTO userDTO = null;
@@ -52,12 +50,9 @@ public class UserController {
             // Map User to UserDTO
             userDTO = new UserDTO(user);
 
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             responseStatus = HttpStatus.CONFLICT; // Conflict status for user already exists
-            return ResponseEntity.status(responseStatus).body(null);
-        } catch (Exception exception) {
-            responseStatus = HttpStatus.NOT_ACCEPTABLE;
-            userDTO = null;
+            return ResponseEntity.status(responseStatus).body(e.getMessage());
         }
 
         return ResponseEntity.status(responseStatus)
@@ -65,30 +60,28 @@ public class UserController {
                 .body(userDTO);
     }
 
-
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> loginUser(@RequestBody User user) {
-        User currentUser;
-        String token;
+    public ResponseEntity<?> loginUser(@RequestParam String userName, @RequestParam String password) {
         HttpStatus status;
-        UserDTO userDTO;
+        String token;
         try {
-            token = userService.VerifyUser(user);
-            status = HttpStatus.OK;
-            currentUser = userService.getUserByUserName(user.getUserName());
+            if (userService.autheticateUser(userName, password)) {
+                User user = userService.getUserByUserName(userName);
+                token = jwtService.GenerateToken(user);
+                UserDTO userDTO = new UserDTO(user);
+                status = HttpStatus.OK;
+                return ResponseEntity.status(status).header(HttpHeaders.AUTHORIZATION, token).body(userDTO);
+            } else {
+                status = HttpStatus.UNAUTHORIZED;
+                return ResponseEntity.status(status).body("Invalid username or password");
+            }
         } catch (NoSuchElementException e) {
             status = HttpStatus.UNAUTHORIZED;
-            currentUser = null;
-            token = null;
+            return ResponseEntity.status(status).body(e.getMessage());
         } catch (Exception e) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
-            currentUser = null;
-            token = null;
+            return ResponseEntity.status(status).body("An error occurred while processing the request");
         }
-        userDTO = new UserDTO(user);
-        return ResponseEntity.status(status)
-                .header(HttpHeaders.AUTHORIZATION, token)
-                .body(userDTO);
     }
 
     @GetMapping("/{Id}")

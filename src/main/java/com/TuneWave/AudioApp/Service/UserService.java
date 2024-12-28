@@ -11,5 +11,6 @@ public interface UserService {
     boolean updateUser(User user);
     boolean deleteUser(Long id);
     User getUserByUserName(String userName);
-    String VerifyUser(User user);
+    boolean autheticateUser(String userName, String password);
+    String generateToken(User user);
 }
