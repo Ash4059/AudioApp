@@ -4,6 +4,8 @@ import com.TuneWave.AudioApp.DTO.UserDTO;
 import com.TuneWave.AudioApp.Entity.User;
 import com.TuneWave.AudioApp.Service.Implementation.JWTService;
 import com.TuneWave.AudioApp.Service.UserService;
+
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
