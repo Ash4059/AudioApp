@@ -20,8 +20,8 @@ public class JWTService {
     @Value("${security.jwtSecret}")
     private String secretKey;
 
-    // Expiration time set to 30 days
-    final long expirationTime = 30L * 24 * 60 * 60 * 1000;
+    // Expiration time set to 60 Minute
+    final long expirationTime = 60 * 60 * 1000;
 
     // Extract expiry date from token
     public Date extractExpiration(String token){
